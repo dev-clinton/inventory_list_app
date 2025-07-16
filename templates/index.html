@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Inventory</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script>
+    function confirmDelete(name) {
+      return confirm(`Are you sure you want to delete "${name}"?`);
+    }
+  </script>
+</head>
+<body class="container mt-4">
+  <h1 class="mb-4">Inventory List</h1>
+
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <!-- Search and Reset -->
+  <form method="GET" action="{{ url_for('index') }}" class="mb-3">
+    <div class="input-group">
+      <input type="text" name="search" value="{{ search or '' }}" class="form-control" placeholder="Search items...">
+      <button class="btn btn-outline-primary" type="submit">Search</button>
+      <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">Reset</a>
+    </div>
+  </form>
+
+  <!-- Create Button -->
+  <a href="{{ url_for('create') }}" class="btn btn-primary mb-3">Add New Item</a>
+
+  <!-- Inventory Table -->
+  <table class="table table-bordered table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Quantity</th>
+        <th>Price (₦)</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    {% if items %}
+    <tbody>
+      {% for item in items %}
+        <tr>
+          <td>{{ item[0] }}</td>
+          <td>{{ item[1] }}</td>
+          <td>{{ item[2] }}</td>
+          <td>{{ "%.2f"|format(item[3]) }}</td>
+          <td>
+            <a href="{{ url_for('update', id=item[0]) }}" class="btn btn-sm btn-warning">Edit</a>
+            <a href="{{ url_for('delete', id=item[0]) }}" class="btn btn-sm btn-danger"
+               onclick="return confirmDelete('{{ item[1] }}')">Delete</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+    {% else %}
+    <tbody>
+      <tr>
+        <td colspan="5" class="text-center">No items found</td>
+      </tr>
+    </tbody>
+    {% endif %}
+  </table>
+
+  <!-- Total Inventory Value -->
+  {% if items %}
+    <div class="alert alert-info">
+      <strong>Total Inventory Value:</strong> ₦{{ "%.2f"|format(total_value) }}
+    </div>
+  {% endif %}
+
+  <!-- Bootstrap JS for alerts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

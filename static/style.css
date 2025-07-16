@@ -1,0 +1,23 @@
+body {
+  background-color: #bddaf8;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h1 {
+  color: #313030;
+  margin-bottom: 20px;
+}
+
+.table {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.btn {
+  border-radius: 6px;
+}
+
+form input {
+  border-radius: 5px;
+}
